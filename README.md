@@ -4,7 +4,7 @@
 
 #### The human immune system has a wide variety of receptors that allow it to recognize an almost unlimited number of antigens. This diversity is formed by the V(D) processJ-recombination is the random assembly of genetic segments V, D, and J.
 #### As a result, each B- or T-cell receives a unique receptor, and the combination of such receptors forms the so-called immune repertoire.
-![VJ's](pics/pic.png)
+![VJs](pics/pic.png)
 
 *VJ segments*
 
@@ -21,9 +21,10 @@
 
 #### Each nucleotide was encoded numerically, and a special symbol was added to align the sequences to a fixed length.
 ![Preprocessing](pics/prep.png)
+*Preprocessing scheme*
+
 #### In addition, we implemented multithreaded processing of FASTQ files, which significantly accelerated data preparation.
 
-*Preprocessing scheme*
 ### Model
 #### A fixed-length sequence obtained after preprocessing is fed to the input of the model. The model is based on the encoder–decoder principle. The encoder gradually compresses the input sequence, extracting more and more abstract features. At this stage, the model learns to recognize local and more global structures in the data.
 #### This is followed by the bottleneck layer, which plays the role of a "bottleneck" in which only the most significant information remains.
