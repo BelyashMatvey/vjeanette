@@ -121,11 +121,11 @@ python run.py --in_file data/immune_repertoire.fastq \
 | ```j_end```   | End position of J segment             |
 | ```score```   | Confidence score for the prediction   |
 ## Performance Tips
-1. **GPU Memory:** Adjust ```--batch_size``` based on your GPU memory. Start with 32768 and decrease if you get CUDA out of memory errors.
+1. **GPU Memory**: Adjust ```--batch_size``` based on your GPU memory. Start with 32768 and decrease if you get CUDA out of memory errors.
 
-2. CPU Cores: Increase ```--n_cores``` for faster data loading (typical values: 4-8 cores).
+2. **CPU Cores**: Increase ```--n_cores``` for faster data loading (typical values: 4-8 cores).
 
-3. Mixed Precision: The model automatically uses FP16 on CUDA devices for faster inference.
+3. **Mixed Precision**: The model automatically uses FP16 on CUDA devices for faster inference.
 
 ## Requirements
 - Python 3.10+
