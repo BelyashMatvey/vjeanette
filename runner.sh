@@ -11,4 +11,4 @@
 
 cd ~/vidjil/seq2vdj
 conda activate py_env
-python run.py --in_file ./data/m18748718.fastq --device cuda
+python run.py
