@@ -165,6 +165,40 @@ VJeaNETte/\
 make run
 ```
 ---
+## ⚙️ Configuration via pyproject.toml
+### Inference parameters can be predefined in the project configuration file:
+```toml
+[tool.vjeanette.test]
+input = "./data/test.fastq"
+output = "./out/test_out.csv"
+model_path = "./weights/model_custom.pth"
+```
+| Field        | Description                   |
+| ------------ | ----------------------------- |
+| `input`      | Path to input FASTQ file      |
+| `output`     | Path to output CSV file       |
+| `model_path` | Path to trained model weights |
+
+---
+## 🚀 Running Inference
+### Option 1 — via CLI (manual arguments)
+```bash
+vjea-infer --in_file ./data/test.fastq \
+           --out_file ./out/test_out.csv \
+           --model_path ./weights/model_custom.pth
+```
+---
+### Option 2 — via config (pyproject.toml)
+#### If arguments are not provided, values from ``pyproject.toml`` will be used automatically:
+```bash
+vjea-infer
+```
+---
+### Option 3 — via Makefile
+```bash
+make run
+```
+---
 👨‍🔬 Authors
 - Matvei Beliakov — SPbU
 - Elisaveta Vlasova — RNRMU
