@@ -3,9 +3,9 @@ import time
 import torch
 import logging
 from torch.utils.data import DataLoader
-from model.parser import FastqDataset
-from .utils import reverse_complement, get_intervals_fast, select_best_strand
-from .config import DEFAULT_THRESHOLDS
+from vjeanette.parser import FastqDataset
+from vjeanette.utils import reverse_complement, get_intervals_fast, select_best_strand
+from vjeanette.config import DEFAULT_THRESHOLDS
 
 class InferenceRunner:
     def __init__(self, model, device='cuda', thresholds=None):
@@ -32,49 +32,32 @@ class InferenceRunner:
         x = torch.cat([x, x_rc], 0).to(self.device, non_blocking=True)
         
         with torch.autocast("cuda"):
-            v_logits, j_logits = self.model(x)
+            cdr3_logits, v_logits, j_logits = self.model(x)
         
         v_probs = torch.sigmoid(v_logits)
         j_probs = torch.sigmoid(j_logits)
+        cdr3_probs = torch.sigmoid(cdr3_logits)
         
         vf, vr = v_probs[:bs], v_probs[bs:]
         jf, jr = j_probs[:bs], j_probs[bs:]
-        
+        cdrs,cdre = cdr3_probs[:bs], j_probs[bs:]
         has_vf = vf.max(1).values > self.thresholds['v_exist']
         has_vr = vr.max(1).values > self.thresholds['v_exist']
         has_jf = jf.max(1).values > self.thresholds['j_exist']
         has_jr = jr.max(1).values > self.thresholds['j_exist']
+        has_cdrf = cdrs.max(1).values > self.thresholds['cdr_exist']
+        has_cdrr = cdre.max(1).values > self.thresholds['cdr_exist']
         
         choose_f, max_vf, max_vr, max_jf, max_jr = select_best_strand(
             vf, vr, jf, jr, has_vf, has_vr, has_jf, has_jr
         )
         
-        # Получение интервалов
-        vs_f, ve_f = get_intervals_fast(vf, self.thresholds['mask'])
-        js_f, je_f = get_intervals_fast(jf, self.thresholds['mask'])
-        vs_r, ve_r = get_intervals_fast(vr, self.thresholds['mask'])
-        js_r, je_r = get_intervals_fast(jr, self.thresholds['mask'])
-        
-        # Применение масок
-        self._apply_masks(vs_f, ve_f, has_vf)
-        self._apply_masks(js_f, je_f, has_jf)
-        self._apply_masks(vs_r, ve_r, has_vr)
-        self._apply_masks(js_r, je_r, has_jr)
-        
         return self._prepare_results(read_ids, choose_f, 
-                                     vs_f, ve_f, js_f, je_f,
-                                     vs_r, ve_r, js_r, je_r,
-                                     has_vf, has_jf, has_vr, has_jr,
+                                     has_vf, has_jf, has_vr, has_jr,has_cdrf, has_cdrr,
                                      choose_f, max_vf, max_vr, max_jf, max_jr)
     
-    def _apply_masks(self, starts, ends, has_region):
-        starts[~has_region] = -1
-        ends[~has_region] = -1
-    
     def _prepare_results(self, read_ids, choose_f, 
-                        vs_f, ve_f, js_f, je_f,
-                        vs_r, ve_r, js_r, je_r,
-                        has_vf, has_jf, has_vr, has_jr,
+                        has_vf, has_jf, has_vr, has_jr, has_cdrf, has_cdrr,
                         choose_f_mask, max_vf, max_vr, max_jf, max_jr):
         
         rows = []
@@ -84,8 +67,6 @@ class InferenceRunner:
                 rows.append([
                     rid, "forward",
                     int(has_vf[i]), int(has_jf[i]),
-                    int(vs_f[i]), int(ve_f[i]),
-                    int(js_f[i]), int(je_f[i]),
                     float(score)
                 ])
             else:
@@ -93,8 +74,6 @@ class InferenceRunner:
                 rows.append([
                     rid, "reverse",
                     int(has_vr[i]), int(has_jr[i]),
-                    int(vs_r[i]), int(ve_r[i]),
-                    int(js_r[i]), int(je_r[i]),
                     float(score)
                 ])
         return rows

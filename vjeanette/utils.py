@@ -1,5 +1,5 @@
 import torch
-from .config import RC_TABLE
+from vjeanette.config import RC_TABLE
 
 def reverse_complement(x):
     """Reverse complement"""

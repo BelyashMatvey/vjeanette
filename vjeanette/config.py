@@ -8,7 +8,8 @@ RC_TABLE = torch.tensor([3,2,1,0,4,5], dtype=torch.uint8)
 DEFAULT_THRESHOLDS = {
     'v_exist': 0.02,
     'j_exist': 0.02,
-    'mask': 0.04
+    'mask': 0.04,
+    'cdr_exist': 0.02
 }
 
 # CUDA

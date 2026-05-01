@@ -1,143 +1,177 @@
 # VJeaNETte
 
-## About problem
+Fast V(D)J sequence annotation tool for FASTQ data using a 1D U-Net model.
 
-#### The human immune system has a wide variety of receptors that allow it to recognize an almost unlimited number of antigens. This diversity is formed by the V(D)J recombination process - the random assembly of genetic segments V, D, and J.
+---
 
-#### As a result, each B- or T-cell receives a unique receptor, and the combination of such receptors forms the so-called immune repertoire.
+## 🧬 About
+
+The human immune system generates an enormous diversity of receptors through **V(D)J recombination**, where V, D, and J gene segments are randomly assembled.
+
+Each B- or T-cell gets a unique receptor, forming an **immune repertoire**.
 
 ![VJs](pics/pic.png)
 
-*VJ segments*
+Accurate identification of V and J segments is crucial for:
 
-#### The analysis of this repertoire is of great practical importance.
-#### It is used, for example, for:
-- studying the immune response to infections,
-- analyzing oncological diseases,
-- development of vaccines and immunotherapy.
+- immune response analysis
+- cancer research
+- vaccine development
+- immunotherapy
 
-#### However, the key task in this analysis is to correctly identify the V, D, and J segments in the sequences. The purpose of our work was to create a model based on convolutional neural networks for detecting VJ fragments.
+**Goal of this project:**  
+Detect **V, J and CDR3 regions** directly from sequencing data using deep learning.
 
-## Description
+---
 
-#### This tool allows you to find V, J and CDR3 segments in RNA-seq data by using Convolutional Neural Network.
+## ⚙️ Features
 
-### Preprocessing
+- ⚡ Fast FASTQ inference (multi-threaded)
+- 🧠 1D U-Net architecture for positional prediction
+- 🎯 Detects V, J and CDR3 segments
+- 🚀 GPU acceleration (CUDA)
+- 📦 CLI + config via `pyproject.toml`
+- 🛠 Training pipeline included
 
-#### Each nucleotide was encoded numerically, and a special symbol was added to align the sequences to a fixed length.
+---
 
-![Preprocessing](pics/prep.png)
+## 🧠 Model
 
-*Preprocessing scheme*
+- Encoder-decoder (U-Net-like)
+- Positional prediction (not classification!)
+- Separate heads for:
+  - V segment
+  - J segment
+  - CDR3 region
 
-#### In addition, we implemented multithreaded processing of FASTQ files, which significantly accelerated data preparation.
+![Model](pics/model_arch.png)
 
-### Model
+---
 
-#### A fixed-length sequence obtained after preprocessing is fed to the input of the model. The model is based on the encoder–decoder principle. The encoder gradually compresses the input sequence, extracting more and more abstract features. At this stage, the model learns to recognize local and more global structures in the data.
+## 🔧 Installation
 
-#### This is followed by the bottleneck layer, which plays the role of a "bottleneck" in which only the most significant information remains.
+### 1. Clone repo
 
-#### After that, the decoder restores the spatial structure, allowing you to switch back to positional prediction.
-
-#### An important feature is that the model does positional detection, rather than just classifying the entire sequence. That is, at the output we get a probability distribution for each position, separately for V and J segments. For this, the architecture uses two output heads, one for V and the other for J. This allows the model to simultaneously solve two related tasks and take into account their interrelationship.
-
-![Model](pics/model.png)
-
-*Model architecture*
-
-## Project Structure
-VJeaNETte/\
-├── run.py # Main entry point\
-├── inference/ # Inference module\
-│ ├── init.py # Package interface\
-│ ├── core.py # Core inference logic\
-│ ├── utils.py # Utility functions\
-│ └── config.py # Configuration constants\
-├── model/ # Model module\
-│ ├── init.py\
-│ ├── model.py # UNet1D_Embed architecture\
-│ └── parser.py # FastqDataset\
-├── logs/ # Log directory\
-└── out/ # Output directory\
-
-
-## Installing
-
-#### Just _git clone_ it
-
-```commandline
+```bash
 git clone https://github.com/yourusername/VJeaNETte.git
 cd VJeaNETte
 ```
+---
+### 2. Setup environment
 
-## Usage
-```python
-python run.py --in_file file.fastq [options]
+```bash
+make setup
 ```
-## Command Line Arguments
 
-| Argument            | Description                           | Default                    | Example                       |
-|---------------------|---------------------------------------|----------------------------|-------------------------------|
-| ```--in_file```     | Input FASTQ file (required)           | ```./data/test.fastq```    | ```--in_file sample.fastq```  |
-| ```--device```      | Device to run inference on (cuda/cpu) | ```cuda```                 | ```--device cpu```            |
-| ```--batch_size```  | Batch size for inference              | ```32768```                | ```--batch_size 16384```      |
-| ```--n_cores```     | Number of CPU cores for data loading  | ```1```                    | ```--n_cores 4```             |
-| ```--out_file```    | Output CSV file path                  | ```./out/test_out.csv```   | ```--out_file results.csv```  |
-| ```--logs```        | Log file path                         | ```./logs/progress.log```  | ```--logs ./logs/run.log```   |
-| ```--model_path```  | Path to model weights                 | ```./model/model_v1.pth``` | ```--model_path custom.pth``` |
+#### For development:
 
-## Example Commands
-```python
-# Basic usage with default settings
-python run.py --in_file data/sample.fastq
-
-# Run on CPU with custom batch size
-python run.py --in_file data/sample.fastq --device cpu --batch_size 8192
-
-# Run with multiple CPU cores for faster preprocessing
-python run.py --in_file data/large_sample.fastq --n_cores 8 --batch_size 32768
-
-# Full example with all parameters
-python run.py --in_file data/immune_repertoire.fastq \
-              --device cuda \
-              --batch_size 65536 \
-              --n_cores 4 \
-              --out_file ./results/predictions.csv \
-              --logs ./logs/inference.log
+```bash
+make setup-dev
 ```
-## Output Format
+---
+### ⚠️PyTorch (GPU)
 
+#### If you want CUDA support:
+```bash
+venv/bin/pip install torch --index-url https://download.pytorch.org/whl/cu121
+```
+---
+### 🚀 Quick Start
+#### Inference
+```bash
+make run
+```
+##### or manually:
+```bash
+python -m vjeanette.run --in_file ./data/test.fastq
+```
+---
+### Training
+```bash
+make train
+```
+---
+## ⚙Configuration (pyproject.toml)
+#### All parameters can be configured in:
+```toml
+[tool.vjeanette.data]
+ig_file = "./data/train.tsv"
+tcr_file = "./data/train_tcr.tsv"
+pt_output = "./data/train_out.pt"
+neg_ratio = 3
 
-| Column        | Description                           |
-|---------------|---------------------------------------|
-| ```read_id``` | Original read identifier from FASTQ   |
-| ```strand```  | Detected strand (forward/reverse)     |
-| ```has_v```   | Whether V segment was detected (0/1)  |
-| ```has_j```   | Whether J segment was detected (0/1)  |
-| ```v_start``` | Start position of V segment           |
-| ```v_end```   | End position of V segment             |
-| ```j_start``` | Start position of J segment           |
-| ```j_end```   | End position of J segment             |
-| ```score```   | Confidence score for the prediction   |
-## Performance Tips
-1. **GPU Memory**: Adjust ```--batch_size``` based on your GPU memory. Start with 32768 and decrease if you get CUDA out of memory errors.
+[tool.vjeanette.training]
+epochs = 130
+batch_size = 256
+lr = 0.0003
 
-2. **CPU Cores**: Increase ```--n_cores``` for faster data loading (typical values: 4-8 cores).
+[tool.vjeanette.model]
+embed_dim = 32
 
-3. **Mixed Precision**: The model automatically uses FP16 on CUDA devices for faster inference.
-
-## Requirements
-- Python 3.10+
-- PyTorch 2.0+
-- CUDA (optional, for GPU acceleration)
-## Support
-
-#### Contact with us via gmail:neonlight20006@gmail.com
-
-## Contributing
-#### Beliakov Matvei, Department of Biology, Saint-Petersburg State University
-#### Vlasova Elisaveta, Immunosequencing Algorithms Laboratory, RNRMU
-#### Mikhail Shugay, Immunosequencing Algorithms Laboratory, RNRMU
-## Project status
-#### Under active development
+[tool.vjeanette.output]
+model_path = "./weights/model.pth"
+```
+---
+📥  CLI Arguments
+---
+| Argument       | Description          | Default               |
+| -------------- | -------------------- | --------------------- |
+| `--in_file`    | Input FASTQ          | `./data/test.fastq`   |
+| `--device`     | cuda / cpu           | `cuda`                |
+| `--batch_size` | Inference batch size | `32768`               |
+| `--n_cores`    | CPU workers          | `1`                   |
+| `--out_file`   | Output CSV           | `./out/test_out.csv`  |
+| `--logs`       | Log file             | `./logs/progress.log` |
+| `--model_path` | Model weights        | `./weights/model.pth` |
+---
+📤 Output
+---
+| Column          | Description       |
+| --------------- | ----------------- |
+| read_id         | FASTQ read ID     |
+| strand          | forward / reverse |
+| has_v           | V detected (0/1)  |
+| has_j           | J detected (0/1)  |
+| v_start / v_end | V segment         |
+| j_start / j_end | J segment         |
+| score           | Confidence        |
+---
+📁 Project Structure
+---
+VJeaNETte/\
+├── pyproject.toml\
+├── Makefile\
+│\
+├── vjeanette/\
+│   ├── run.py\
+│   ├── train.py\
+│   ├── preprocessing.py\
+│   ├── core.py\
+│   └── model/\
+│       └── model.py\
+│\
+├── data/\
+├── logs/\
+├── weights/\
+└── out/
+---
+⚡ Performance Tips
+- Increase ``--batch_size`` for GPU speed
+- Use ``--n_cores`` 4-8 for FASTQ parsing
+- Mixed precision (FP16) enabled automatically on CUDA
+---
+🧪 Inference
+```bash
+make run
+```
+---
+👨‍🔬 Authors
+- Matvei Beliakov — SPbU
+- Elisaveta Vlasova — RNRMU
+- Mikhail Shugay — RNRMU
+---
+📬 Contact
+neonlight20006@gmail.com
+---
+📌 Status
+🚧 Active development

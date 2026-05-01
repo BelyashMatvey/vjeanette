@@ -1,0 +1,54 @@
+[project]
+name = "VJeaNETte"
+version = "0.1.0"
+description = "Fastq inference and training tool with UNet1D"
+requires-python = ">=3.8"
+
+dependencies = [
+    "numpy>=1.24",
+    "tqdm>=4.60",
+]
+
+[project.optional-dependencies]
+train = [
+    "pandas",
+    "scikit-learn",
+    "matplotlib"
+]
+
+dev = [
+    "pytest",
+    "black",
+    "ruff"
+]
+
+[tool.vjeanette.test]
+input = './data/test.fastq'
+output = "out/test_out.csv"
+model_path = "./weights/model_custom.pth"
+
+
+[tool.vjeanette.training]
+epochs = 130
+batch_size = 256
+lr = 0.0003
+val_split = 0.1
+test_split = 0.3
+ig_file = "./data/train.tsv"
+tcr_file = "./data/train_tcr.tsv"
+pt_output = "./data/train_out.pt"
+neg_ratio = 3
+model_name = "model_custom.pth"
+
+[tool.vjeanette.model]
+embed_dim = 32
+
+[project.scripts]
+vjea-infer = "vjeanette.run:main"
+vjea-train = "vjeanette.train:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["vjeanette*", "model*"]
+exclude = ["data*", "logs*", "out*", "pics*", "weights*"]
+

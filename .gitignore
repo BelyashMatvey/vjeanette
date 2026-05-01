@@ -3,3 +3,9 @@ __pycache__
 runner.sh
 Task*
 m1*
+VJeaNETte.egg-info
+requirements.txt
+my_conda*
+venv
+*.pt
+*.tsv

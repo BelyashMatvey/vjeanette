@@ -1,6 +1,8 @@
 import torch.nn as nn
 import torch
 
+import torch.nn as nn
+
 class UNet1D_Embed(nn.Module):
     def __init__(self, embed_dim=32, out_channels=1, features=[8,16,64,64]):
         super().__init__()
@@ -9,11 +11,13 @@ class UNet1D_Embed(nn.Module):
         
         in_channels = embed_dim
         
+        # Encoder
         self.enc1 = self._encoder_block(in_channels, features[0])
         self.enc2 = self._encoder_block(features[0], features[1])
         self.enc3 = self._encoder_block(features[1], features[2])
         self.enc4 = self._encoder_block(features[2], features[3])
         
+        # Bottleneck
         self.bottleneck = nn.Sequential(
             nn.Conv1d(features[3], features[3]*2, kernel_size=15, padding=7, bias=False),
             nn.BatchNorm1d(features[3]*2),
@@ -58,6 +62,12 @@ class UNet1D_Embed(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv1d(features[0]//2, out_channels, kernel_size=1)
         )
+        self.cdr_head = nn.Sequential(
+            nn.Conv1d(features[0], features[0]//2, kernel_size = 1),
+            nn.ReLU(inplace = True),
+            nn.Conv1d(features[0]//2, out_channels, kernel_size = 1)
+        )
+        
     
     def _encoder_block(self, in_channels, out_channels):
         return nn.Sequential(
@@ -85,7 +95,10 @@ class UNet1D_Embed(nn.Module):
         )
     
     def forward(self, x):
-        x = self.embed(x).transpose(1, 2)  
+        """
+        x: [B, L] LongTensor индексы 0..5
+        """
+        x = self.embed(x).transpose(1, 2)  # [B, embed_dim, L]
         
         e1 = self.enc1(x)
         e2 = self.enc2(e1)
@@ -111,5 +124,6 @@ class UNet1D_Embed(nn.Module):
         
         v_out = self.v_head(d1)
         j_out = self.j_head(d1)
+        cdr_out = self.cdr_head(d1)
         
-        return v_out.squeeze(1), j_out.squeeze(1)
+        return v_out.squeeze(1), j_out.squeeze(1), cdr_out.squeeze(1)
