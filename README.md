@@ -91,6 +91,43 @@ python -m vjeanette.run --in_file ./data/test.fastq
 make train
 ```
 ---
+
+## 📓 Notebooks
+
+For full reproducibility of the workflow, the project includes a set of Jupyter notebooks located in the `notebooks/` directory.
+
+### Available notebooks
+
+#### 1. `01_preprocessing.ipynb`
+
+Demonstrates the complete data preparation pipeline:
+
+* loading and aggregating IG/TCR annotations;
+* filtering high-confidence V(D)J rearrangements;
+* generating target masks for V, J, and CDR3 regions;
+* sequence encoding and tensor serialization.
+
+#### 2. `02_train.ipynb`
+
+Provides a step-by-step walkthrough of model training:
+
+* dataset loading and splitting;
+* model initialization;
+* training and validation loops;
+* monitoring losses and evaluation metrics;
+* saving trained model weights.
+
+#### 3. `03_inference.ipynb`
+
+Shows how to perform inference using a pretrained model:
+
+* loading model weights;
+* processing FASTQ files;
+* running batch predictions;
+* exporting results to CSV format.
+
+#### These notebooks are intended to serve as a reproducible and interactive demonstration of the complete VJeaNETte workflow, from raw annotated data to model training and inference.
+
 ## ⚙Configuration (pyproject.toml)
 #### All parameters can be configured in:
 ```toml
