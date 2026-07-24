@@ -7,11 +7,11 @@ requires-python = ">=3.8"
 dependencies = [
     "numpy>=1.24",
     "tqdm>=4.60",
+    "pandas"
 ]
 
 [project.optional-dependencies]
 train = [
-    "pandas",
     "scikit-learn",
     "matplotlib"
 ]
@@ -23,8 +23,8 @@ dev = [
 ]
 
 [tool.vjeanette.test]
-input = './data/test.fastq'
-output = "out/test_out.csv"
+input = './data/test_18748717_vidjil.fastq'
+output = "out/test_out_fasta.csv"
 model_path = "./weights/model_custom.pth"
 
 

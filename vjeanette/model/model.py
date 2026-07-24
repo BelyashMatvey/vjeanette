@@ -126,4 +126,4 @@ class UNet1D_Embed(nn.Module):
         j_out = self.j_head(d1)
         cdr_out = self.cdr_head(d1)
         
-        return v_out.squeeze(1), j_out.squeeze(1), cdr_out.squeeze(1)
+        return cdr_out.squeeze(1), v_out.squeeze(1), j_out.squeeze(1)

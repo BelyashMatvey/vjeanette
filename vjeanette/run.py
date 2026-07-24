@@ -27,7 +27,7 @@ def main():
     parser.add_argument('--device', default='cuda')
     parser.add_argument('--n_cores', type=int, default=1)
     parser.add_argument('--batch_size', type=int, default=32768)
-    parser.add_argument('--logs', default='./logs/progress.log')
+    parser.add_argument('--logs', default='./logs/progress_10245671.log')
 
     args = parser.parse_args()
 
@@ -35,10 +35,10 @@ def main():
     args.in_file = args.in_file or config["tool"]["vjeanette"]["test"]["input"]
     args.out_file = args.out_file or config["tool"]["vjeanette"]["test"]["output"]
     args.model_path = args.model_path or config["tool"]["vjeanette"]["test"]["model_path"]
-
+    
     # --- model ---
     model = UNet1D_Embed().to(args.device)
-    model.load_state_dict(torch.load(args.model_path, weights_only = True))
+    model.load_state_dict(torch.load(args.model_path, weights_only = True, map_location = args.device))
     model = torch.compile(model, mode="reduce-overhead")
     model = model.to(memory_format=torch.channels_last)
 

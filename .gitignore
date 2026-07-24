@@ -9,3 +9,7 @@ my_conda*
 venv
 *.pt
 *.tsv
+result*
+test*
+train*
+out
