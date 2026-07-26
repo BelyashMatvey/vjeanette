@@ -44,7 +44,7 @@ Detect **V, J and CDR3 regions** directly from sequencing data using deep learni
   - J segment
   - CDR3 region
 
-![Model](pics/model_arch.png)
+![Model](pics/model.png)
 
 ---
 
