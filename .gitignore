@@ -13,3 +13,4 @@ result*
 test*
 train*
 out
+*.log

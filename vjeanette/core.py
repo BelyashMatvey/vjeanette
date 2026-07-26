@@ -136,8 +136,9 @@ class InferenceRunner:
         num_workers=1
     ):
         import csv
-
+        self.logger.info(f"PARAMETERS:\nFastq file path: {fastq_file}\nOutput csv file: {output_csv}\nBatch size: {batch_size}\nNumber of workers: {num_workers}\nDevice: {self.device}")
         self.logger.info("Run inference")
+        
 
         dataset = FastqDataset(
             fastq_file,
