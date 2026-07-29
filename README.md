@@ -1,93 +1,248 @@
-# seq2vdj
+# VJeaNETte
 
+Fast V(D)J sequence annotation tool for FASTQ data using a 1D U-Net model.
 
+---
 
-## Getting started
+## 🧬 About
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The human immune system generates an enormous diversity of receptors through **V(D)J recombination**, where V, D, and J gene segments are randomly assembled.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Each B- or T-cell gets a unique receptor, forming an **immune repertoire**.
 
-## Add your files
+![VJs](pics/pic.png)
 
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+Accurate identification of V and J segments is crucial for:
 
+- immune response analysis
+- cancer research
+- vaccine development
+- immunotherapy
+
+**Goal of this project:**  
+Detect **V, J and CDR3 regions** directly from sequencing data using deep learning.
+
+---
+
+## ⚙️ Features
+
+- ⚡ Fast FASTQ inference (multi-threaded)
+- 🧠 1D U-Net architecture for positional prediction
+- 🎯 Detects V, J and CDR3 segments
+- 🚀 GPU acceleration (CUDA)
+- 📦 CLI + config via `pyproject.toml`
+- 🛠 Training pipeline included
+
+---
+
+## 🧠 Model
+
+- Encoder-decoder (U-Net-like)
+- Positional prediction (not classification!)
+- Separate heads for:
+  - V segment
+  - J segment
+  - CDR3 region
+
+![Model](pics/model.png)
+
+---
+
+## 🔧 Installation
+
+### 1. Clone repo
+
+```bash
+git clone https://github.com/yourusername/VJeaNETte.git
+cd VJeaNETte
 ```
-cd existing_repo
-git remote add origin https://gitlab.aldan3.itm-rsmu.ru/isagroup/seq2vdj.git
-git branch -M main
-git push -uf origin main
+---
+### 2. Setup environment
+
+```bash
+make setup
 ```
 
-## Integrate with your tools
+#### For development:
 
-* [Set up project integrations](https://gitlab.aldan3.itm-rsmu.ru/isagroup/seq2vdj/-/settings/integrations)
+```bash
+make setup-dev
+```
+---
+### ⚠️PyTorch (GPU)
 
-## Collaborate with your team
+#### If you want CUDA support:
+```bash
+venv/bin/pip install torch --index-url https://download.pytorch.org/whl/cu121
+```
+---
+### 🚀 Quick Start
+#### Inference
+```bash
+make run
+```
+##### or manually:
+```bash
+python -m vjeanette.run --in_file ./data/test.fastq
+```
+---
+### Training
+```bash
+make train
+```
+---
 
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+## 📓 Notebooks
 
-## Test and Deploy
+For full reproducibility of the workflow, the project includes a set of Jupyter notebooks located in the `notebooks/` directory.
 
-Use the built-in continuous integration in GitLab.
+### Available notebooks
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+#### 1. `01_preprocessing.ipynb`
 
-***
+Demonstrates the complete data preparation pipeline:
 
-# Editing this README
+* loading and aggregating IG/TCR annotations;
+* filtering high-confidence V(D)J rearrangements;
+* generating target masks for V, J, and CDR3 regions;
+* sequence encoding and tensor serialization.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+#### 2. `02_train.ipynb`
 
-## Suggestions for a good README
+Provides a step-by-step walkthrough of model training:
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+* dataset loading and splitting;
+* model initialization;
+* training and validation loops;
+* monitoring losses and evaluation metrics;
+* saving trained model weights.
 
-## Name
-Choose a self-explaining name for your project.
+#### 3. `03_inference.ipynb`
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Shows how to perform inference using a pretrained model:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+* loading model weights;
+* processing FASTQ files;
+* running batch predictions;
+* exporting results to CSV format.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+#### These notebooks are intended to serve as a reproducible and interactive demonstration of the complete VJeaNETte workflow, from raw annotated data to model training and inference.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## ⚙Configuration (pyproject.toml)
+#### All parameters can be configured in:
+```toml
+[tool.vjeanette.data]
+ig_file = "./data/train.tsv"
+tcr_file = "./data/train_tcr.tsv"
+pt_output = "./data/train_out.pt"
+neg_ratio = 3
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+[tool.vjeanette.training]
+epochs = 130
+batch_size = 256
+lr = 0.0003
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+[tool.vjeanette.model]
+embed_dim = 32
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+[tool.vjeanette.output]
+model_path = "./weights/model.pth"
+```
+---
+📥  CLI Arguments
+---
+| Argument       | Description          | Default               |
+| -------------- | -------------------- | --------------------- |
+| `--in_file`    | Input FASTQ          | `./data/test.fastq`   |
+| `--device`     | cuda / cpu           | `cuda`                |
+| `--batch_size` | Inference batch size | `32768`               |
+| `--n_cores`    | CPU workers          | `1`                   |
+| `--out_file`   | Output CSV           | `./out/test_out.csv`  |
+| `--logs`       | Log file             | `./logs/progress.log` |
+| `--model_path` | Model weights        | `./weights/model.pth` |
+---
+📤 Output
+---
+| Column          | Description       |
+| --------------- | ----------------- |
+| read_id         | FASTQ read ID     |
+| strand          | forward / reverse |
+| has_v           | V detected (0/1)  |
+| has_j           | J detected (0/1)  |
+| v_start / v_end | V segment         |
+| j_start / j_end | J segment         |
+| score           | Confidence        |
+---
+📁 Project Structure
+---
+VJeaNETte/\
+├── pyproject.toml\
+├── Makefile\
+│\
+├── vjeanette/\
+│   ├── run.py\
+│   ├── train.py\
+│   ├── preprocessing.py\
+│   ├── core.py\
+│   └── model/\
+│       └── model.py\
+│\
+├── data/\
+├── logs/\
+├── weights/\
+└── out/
+---
+⚡ Performance Tips
+- Increase ``--batch_size`` for GPU speed
+- Use ``--n_cores`` 4-8 for FASTQ parsing
+- Mixed precision (FP16) enabled automatically on CUDA
+---
+🧪 Inference
+```bash
+make run
+```
+---
+## ⚙️ Configuration via pyproject.toml
+### Inference parameters can be predefined in the project configuration file:
+```toml
+[tool.vjeanette.test]
+input = "./data/test.fastq"
+output = "./out/test_out.csv"
+model_path = "./weights/model_custom.pth"
+```
+| Field        | Description                   |
+| ------------ | ----------------------------- |
+| `input`      | Path to input FASTQ file      |
+| `output`     | Path to output CSV file       |
+| `model_path` | Path to trained model weights |
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+---
+## 🚀 Running Inference
+### Option 1 — via CLI (manual arguments)
+```bash
+vjea-infer --in_file ./data/test.fastq \
+           --out_file ./out/test_out.csv \
+           --model_path ./weights/model_custom.pth
+```
+---
+### Option 2 — via config (pyproject.toml)
+#### If arguments are not provided, values from ``pyproject.toml`` will be used automatically:
+```bash
+vjea-infer
+```
+---
+### Option 3 — via Makefile
+```bash
+make run
+```
+---
+👨‍🔬 Authors
+- Matvei Beliakov — SPbU
+- Elisaveta Vlasova — RNRMU
+- Mikhail Shugay — RNRMU
+---
+📬 Contact
+neonlight20006@gmail.com
+---
+📌 Status
+🚧 Active development

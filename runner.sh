@@ -7,8 +7,9 @@
 #SBATCH --cpus-per-task=32         # Run on a single CPU
 #SBATCH --mem=128gb   
 #SBATCH --constraint=gpu
-#SBATCH --gres=gpu:1
-
 cd ~/vidjil/seq2vdj
 conda activate py_env
-python run.py --in_file ./data/m18748718.fastq --device cuda
+# /usr/bin/time -f "Реальное время: %e с\nПамять: %M КБ"  python -m vjeanette.run --in_file ~/for_igblast/m10245671.fastq --out_file ./out/test_out_10245671.csv --model_path ./weights/model_custom.pth  --logs ./logs/progress_10245671.log
+/usr/bin/time -f "Реальное время: %e с\nПамять: %M КБ"  python -m vjeanette.run --in_file ~/for_igblast/seq1.fastq --out_file ./out/test_out_seq1.csv --model_path ./weights/model_custom.pth  --logs ./logs/progress_seq1.log --device cpu
+# /usr/bin/time -f "Реальное время: %e с\nПамять: %M КБ"  python -m vjeanette.run --in_file ~/for_igblast/m18748718.fastq --out_file ./out/test_out_18748718.csv --model_path ./weights/model_custom.pth  --logs ./logs/progress_18748718.log
+# /usr/bin/time -f "Реальное время: %e с\nПамять: %M КБ"  python -m vjeanette.run --in_file ~/for_igblast/m5494024.fastq --out_file ./out/test_out_5494024.csv --model_path ./weights/model_custom.pth  --logs ./logs/progress_5494024.log
