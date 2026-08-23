@@ -2,13 +2,19 @@ import torch
 
 # Constants
 MAX_LEN = 512
-RC_TABLE = torch.tensor([3,2,1,0,4,5], dtype=torch.uint8)
-
+RC_TABLE = torch.tensor([
+    3,  # A -> T
+    2,  # C -> G
+    1,  # G -> C
+    0,  # T -> A
+    4,  # N -> N
+    5   # P -> P
+], dtype=torch.long)
 # Deafults Thresholds
 DEFAULT_THRESHOLDS = {
-    'v_exist': 0.49,
-    'j_exist': 0.08,
-    'cdr_exist': 0.05
+    'v_exist': 0.5,
+    'j_exist': 0.5,
+    'cdr_exist': 0.5
 }
 
 # CUDA

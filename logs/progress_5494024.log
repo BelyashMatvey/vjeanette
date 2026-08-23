@@ -16,3 +16,257 @@
 2026-07-06 19:52:08,250 | TIME: 3776.54
 2026-07-06 19:52:08,251 | READS: 23895016
 2026-07-06 19:52:08,251 | SPEED: 6327.22 reads/sec
+2026-08-06 13:38:42,257 | PARAMETERS:
+Fastq file path: /home/mbelyakov/for_igblast/m5494024.fastq
+Output csv file: ./out/test_out_5494024_newest.csv
+Batch size: 32768
+Number of workers: 1
+Device: cuda
+ Compiling false
+
+2026-08-06 13:38:42,292 | Run inference
+2026-08-07 13:16:47,921 | PARAMETERS:
+Fastq file path: /home/mbelyakov/for_igblast/m5494024.fastq
+Output csv file: ./out/test_out_5494024_newest_2.csv
+Batch size: 32768
+Number of workers: 1
+Device: cuda
+ Compiling false
+
+2026-08-07 13:16:47,970 | Run inference
+2026-08-09 11:31:49,098 | PARAMETERS:
+Fastq file path: /home/mbelyakov/for_igblast/m5494024.fastq
+Output csv file: ./out/test_out_5494024_newest_2.csv
+Batch size: 32768
+Number of workers: 1
+Device: cuda
+ Compiling false
+
+2026-08-09 11:31:49,142 | Run inference
+2026-08-09 12:24:17,220 | TIME: 3148.08
+2026-08-09 12:24:17,220 | READS: 23895016
+2026-08-09 12:24:17,220 | SPEED: 7590.36 reads/sec
+2026-08-09 23:16:17,740 | PARAMETERS:
+Fastq file path: /home/mbelyakov/for_igblast/m5494024.fastq
+Output csv file: ./out/test_out_5494024_newest_2.csv
+Batch size: 32768
+Number of workers: 1
+Device: cuda
+ Compiling false
+
+2026-08-09 23:16:17,787 | Run inference
+2026-08-09 23:21:09,086 | PARAMETERS:
+Fastq file path: /home/mbelyakov/for_igblast/m5494024.fastq
+Output csv file: ./out/test_out_5494024_newest_2.csv
+Batch size: 32768
+Number of workers: 1
+Device: cuda
+ Compiling false
+
+2026-08-09 23:21:09,142 | Run inference
+2026-08-09 23:22:16,932 | PARAMETERS:
+Fastq file path: /home/mbelyakov/for_igblast/m5494024.fastq
+Output csv file: ./out/test_out_5494024_newest_2.csv
+Batch size: 32768
+Number of workers: 1
+Device: cuda
+ Compiling false
+
+2026-08-09 23:22:16,967 | Run inference
+2026-08-09 23:23:05,748 | PARAMETERS:
+Fastq file path: /home/mbelyakov/for_igblast/m5494024.fastq
+Output csv file: ./out/test_out_5494024_newest_2.csv
+Batch size: 32768
+Number of workers: 1
+Device: cuda
+ Compiling false
+
+2026-08-09 23:23:05,779 | Run inference
+2026-08-09 23:26:43,114 | PARAMETERS:
+Fastq file path: /home/mbelyakov/for_igblast/m5494024.fastq
+Output csv file: ./out/test_out_5494024_newest_2.csv
+Batch size: 16384
+Number of workers: 1
+Device: cuda
+ Compiling false
+
+2026-08-09 23:26:43,176 | Run inference
+2026-08-10 00:27:19,886 | TIME: 3636.71
+2026-08-10 00:27:19,886 | READS: 23895016
+2026-08-10 00:27:19,886 | SPEED: 6570.51 reads/sec
+2026-08-14 12:06:47,297 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-14 12:13:53,332 | TIME: 425.99 sec
+2026-08-14 12:13:53,332 | READS: 23895016
+2026-08-14 12:13:53,332 | KEPT: 95582
+2026-08-14 12:13:53,332 | SPEED: 56093.23 reads/sec
+2026-08-14 12:13:53,332 | OUTPUT: ./out/test_out_5494024_newest.fasta
+2026-08-14 21:25:47,792 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-14 21:31:27,457 | TIME: 339.64 sec
+2026-08-14 21:31:27,458 | READS: 23895016
+2026-08-14 21:31:27,458 | KEPT: 99315
+2026-08-14 21:31:27,458 | SPEED: 70353.30 reads/sec
+2026-08-14 21:31:27,458 | OUTPUT: ./out/test_out_5494024_newest.fasta
+2026-08-14 22:53:15,720 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-14 22:58:59,894 | TIME: 344.12 sec
+2026-08-14 22:58:59,894 | READS: 23895016
+2026-08-14 22:58:59,894 | KEPT: 95906
+2026-08-14 22:58:59,894 | SPEED: 69437.78 reads/sec
+2026-08-14 22:58:59,894 | OUTPUT: ./out/test_out_5494024_newest.fasta
+2026-08-15 09:31:55,709 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Evaluation CSV: evaluation_./out/test_out_5494024_newest.fasta.csv
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-15 09:58:10,289 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Evaluation CSV: evaluation_5494024_newest.csv
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-15 10:07:16,412 | TIME: 546.06 sec
+2026-08-15 10:07:16,413 | READS: 23895016
+2026-08-15 10:07:16,413 | KEPT: 95906
+2026-08-15 10:07:16,413 | SPEED: 43758.74 reads/sec
+2026-08-15 10:07:16,413 | OUTPUT FASTA: ./out/test_out_5494024_newest.fasta
+2026-08-15 10:07:16,413 | OUTPUT EVALUATION: evaluation_5494024_newest.csv
+2026-08-15 10:10:53,190 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Evaluation CSV: evaluation_5494024_newest.csv
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-15 15:29:38,454 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Evaluation CSV: evaluation_5494024_newest.csv
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-15 15:37:22,493 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Evaluation CSV: evaluation_5494024_newest.csv
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-16 02:37:31,729 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Evaluation CSV: evaluation_5494024_newest.csv
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-16 15:15:57,207 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Evaluation CSV: evaluation_5494024_newest.csv
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-16 18:43:03,449 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest.fasta
+Evaluation CSV: evaluation_5494024_newest.csv
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-16 19:17:55,254 | TIME: 2091.42 sec
+2026-08-16 19:17:55,255 | READS: 23895016
+2026-08-16 19:17:55,255 | KEPT: 300649
+2026-08-16 19:17:55,255 | SPEED: 11425.27 reads/sec
+2026-08-16 19:17:55,255 | OUTPUT FASTA: ./out/test_out_5494024_newest.fasta
+2026-08-16 19:17:55,255 | OUTPUT EVALUATION: evaluation_5494024_newest.csv
+2026-08-20 16:50:45,952 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest_without_kidney.fasta
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-20 16:53:33,735 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest_without_colon.fasta
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-20 16:54:12,291 | PARAMETERS:
+Fastq file: /home/mbelyakov/for_igblast/m5494024.fastq
+Output FASTA: ./out/test_out_5494024_newest_without_blood.fasta
+Batch size: 32768
+Workers: 1
+Device: cuda
+AMP: True
+Compile: False
+
+2026-08-20 16:56:32,134 | TIME: 346.16 sec
+2026-08-20 16:56:32,153 | READS: 23895016
+2026-08-20 16:56:32,157 | KEPT: 212773
+2026-08-20 16:56:32,159 | SPEED: 69028.38 reads/sec
+2026-08-20 16:56:32,160 | OUTPUT FASTA: ./out/test_out_5494024_newest_without_kidney.fasta
+2026-08-20 16:59:27,396 | TIME: 353.64 sec
+2026-08-20 16:59:27,431 | READS: 23895016
+2026-08-20 16:59:27,440 | KEPT: 1733575
+2026-08-20 16:59:27,442 | SPEED: 67569.52 reads/sec
+2026-08-20 16:59:27,443 | OUTPUT FASTA: ./out/test_out_5494024_newest_without_colon.fasta
+2026-08-20 16:59:48,025 | TIME: 335.72 sec
+2026-08-20 16:59:48,026 | READS: 23895016
+2026-08-20 16:59:48,026 | KEPT: 292388
+2026-08-20 16:59:48,026 | SPEED: 71176.18 reads/sec
+2026-08-20 16:59:48,026 | OUTPUT FASTA: ./out/test_out_5494024_newest_without_blood.fasta

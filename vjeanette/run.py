@@ -28,6 +28,7 @@ def main():
     parser.add_argument('--n_cores', type=int, default=1)
     parser.add_argument('--batch_size', type=int, default=32768)
     parser.add_argument('--logs', default='./logs/progress_10245671.log')
+    parser.add_argument('--compile',action='store_true')
 
     args = parser.parse_args()
 
@@ -39,16 +40,16 @@ def main():
     # --- model ---
     model = UNet1D_Embed().to(args.device)
     model.load_state_dict(torch.load(args.model_path, weights_only = True, map_location = args.device))
-    model = torch.compile(model, mode="reduce-overhead")
-    model = model.to(memory_format=torch.channels_last)
+    if args.compile != 'false':
+        model = torch.compile(model, mode="reduce-overhead")
 
     # --- inference ---
-    runner = InferenceRunner(model, args.device, DEFAULT_THRESHOLDS)
+    runner = InferenceRunner(model, args.device, DEFAULT_THRESHOLDS, compiled=args.compile)
     runner.add_log_handler(args.logs)
 
     runner.run(
         fastq_file=args.in_file,
-        output_csv=args.out_file,
+        output_fasta=args.out_file,
         batch_size=args.batch_size,
         num_workers=args.n_cores
     )

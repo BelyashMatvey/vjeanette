@@ -11,6 +11,16 @@ venv
 *.tsv
 result*
 test*
-train*
+train_*
 out
 *.log
+evaluation*
+core_*
+SRR*
+Untitled*
+m3*
+kidney_data*
+colon_data*
+blood_data*
+lol*
+skin_data*
