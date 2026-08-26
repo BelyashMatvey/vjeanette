@@ -521,3 +521,266 @@ def combine_datasets(input_paths, output_path, verbose=True):
         print("=" * 60)
         print("DATASETS COMBINED SUCCESSFULLY")
         print("=" * 60)
+        
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
+
+
+def load_config(config_path="pyproject.toml"):
+    with open(config_path, "rb") as f:
+        return tomllib.load(f)
+
+
+def main():
+
+    # ==========================================================
+    # CONFIG
+    # ==========================================================
+
+    parser = argparse.ArgumentParser(
+        description="VJeaNETte VDJ dataset preprocessing"
+    )
+
+    # Пути
+    parser.add_argument(
+        "--ig_file",
+        default=None,
+        help="Path to IgBLAST Ig TSV file"
+    )
+
+    parser.add_argument(
+        "--tcr_file",
+        default=None,
+        help="Path to IgBLAST TCR TSV file"
+    )
+
+    parser.add_argument(
+        "--pt_output",
+        default=None,
+        help="Output .pt dataset path"
+    )
+
+    # Dataset parameters
+    parser.add_argument(
+        "--neg_ratio",
+        type=float,
+        default=None,
+        help="Negative/positive sampling ratio"
+    )
+
+    parser.add_argument(
+        "--v_identity",
+        type=float,
+        default=None,
+        help="Minimum V identity"
+    )
+
+    parser.add_argument(
+        "--v_score",
+        type=float,
+        default=None,
+        help="Minimum V score"
+    )
+
+    parser.add_argument(
+        "--j_identity",
+        type=float,
+        default=None,
+        help="Minimum J identity"
+    )
+
+    parser.add_argument(
+        "--j_score",
+        type=float,
+        default=None,
+        help="Minimum J score"
+    )
+
+    parser.add_argument(
+        "--max_v_pos",
+        type=int,
+        default=None,
+        help="Maximum number of V positive samples"
+    )
+
+    parser.add_argument(
+        "--max_j_pos",
+        type=int,
+        default=None,
+        help="Maximum number of J positive samples"
+    )
+
+    parser.add_argument(
+        "--random_state",
+        type=int,
+        default=42,
+        help="Random seed"
+    )
+
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Disable verbose output"
+    )
+
+    parser.add_argument(
+        "--config",
+        default="pyproject.toml",
+        help="Path to pyproject.toml"
+    )
+
+    args = parser.parse_args()
+
+    # ==========================================================
+    # LOAD TOML
+    # ==========================================================
+
+    config = load_config(args.config)
+
+    preprocessing_config = (
+        config["tool"]
+        ["vjeanette"]
+        ["preprocessing"]
+    )
+
+    # ==========================================================
+    # CLI ARGUMENTS HAVE PRIORITY OVER TOML
+    # ==========================================================
+
+    ig_file = (
+        args.ig_file
+        or preprocessing_config["ig_file"]
+    )
+
+    tcr_file = (
+        args.tcr_file
+        or preprocessing_config["tcr_file"]
+    )
+
+    pt_output = (
+        args.pt_output
+        or preprocessing_config["pt_output"]
+    )
+
+    neg_ratio = (
+        args.neg_ratio
+        if args.neg_ratio is not None
+        else preprocessing_config.get("neg_ratio", 1)
+    )
+
+    v_identity = (
+        args.v_identity
+        if args.v_identity is not None
+        else preprocessing_config.get("v_identity", 80)
+    )
+
+    v_score = (
+        args.v_score
+        if args.v_score is not None
+        else preprocessing_config.get("v_score", 50)
+    )
+
+    j_identity = (
+        args.j_identity
+        if args.j_identity is not None
+        else preprocessing_config.get("j_identity", 90)
+    )
+
+    j_score = (
+        args.j_score
+        if args.j_score is not None
+        else preprocessing_config.get("j_score", 40)
+    )
+
+    max_v_pos = (
+        args.max_v_pos
+        if args.max_v_pos is not None
+        else preprocessing_config.get("max_v_pos", 50000)
+    )
+
+    max_j_pos = (
+        args.max_j_pos
+        if args.max_j_pos is not None
+        else preprocessing_config.get("max_j_pos", 50000)
+    )
+
+    verbose = not args.quiet
+
+    # ==========================================================
+    # PRINT PARAMETERS
+    # ==========================================================
+
+    print("=" * 60)
+    print("VJEANETTE PREPROCESSING")
+    print("=" * 60)
+
+    print(f"Ig file:      {ig_file}")
+    print(f"TCR file:     {tcr_file}")
+    print(f"Output:       {pt_output}")
+    print()
+
+    print("DATASET PARAMETERS")
+    print("-" * 60)
+
+    print(f"Negative ratio: {neg_ratio}")
+
+    print(
+        f"V thresholds: "
+        f"identity > {v_identity}, "
+        f"score > {v_score}"
+    )
+
+    print(
+        f"J thresholds: "
+        f"identity > {j_identity}, "
+        f"score > {j_score}"
+    )
+
+    print(f"Max V positives: {max_v_pos}")
+    print(f"Max J positives: {max_j_pos}")
+
+    print("=" * 60)
+
+    # ==========================================================
+    # BUILD DATASET
+    # ==========================================================
+
+    dataset = VDJDataset(
+        ig_path=ig_file,
+        tcr_path=tcr_file,
+
+        neg_ratio=neg_ratio,
+
+        v_identity=v_identity,
+        v_score=v_score,
+
+        j_identity=j_identity,
+        j_score=j_score,
+
+        max_v_pos=max_v_pos,
+        max_j_pos=max_j_pos,
+
+        verbose=verbose,
+        random_state=args.random_state
+    )
+
+    # ==========================================================
+    # SAVE DATASET
+    # ==========================================================
+
+    dataset_to_pt(
+        dataset,
+        pt_output,
+        verbose=verbose
+    )
+
+    print()
+    print("=" * 60)
+    print("PREPROCESSING FINISHED SUCCESSFULLY")
+    print("=" * 60)
+
+
+if __name__ == "__main__":
+    main()

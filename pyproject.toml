@@ -34,11 +34,14 @@ batch_size = 256
 lr = 0.0003
 val_split = 0.1
 test_split = 0.3
+pt_input = "./data/train_out.pt"
+model_name = "model_custom.pth"
+
+[tool.vjeanette.preprocessing]
+pt_output = './data/train.pt'
+neg_ratio = 1
 ig_file = "./data/train.tsv"
 tcr_file = "./data/train_tcr.tsv"
-pt_output = "./data/train_out.pt"
-neg_ratio = 3
-model_name = "model_custom.pth"
 
 [tool.vjeanette.model]
 embed_dim = 32

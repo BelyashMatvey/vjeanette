@@ -235,6 +235,9 @@ def create_optimizer(model, lr=0.0003, pos_weight=2.0, patience=15,
 
     return criterion_v, criterion_j, criterion_cdr, optimizer, scheduler
 
+def load_config():
+    with open("pyproject.toml", "rb") as f:
+        return tomllib.load(f)
 
 def train_epoch(model, train_loader, criterion_v, criterion_j, criterion_cdr, 
                 optimizer, device, verbose=False):
@@ -554,6 +557,11 @@ def main():
     torch.cuda.empty_cache()
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Device: {device}")
+    args.pt_path = args.pt_path or config["tool"]["vjeanette"]["test"]["pt_input"]
+    args.test_split = args.test_split or config["tool"]["vjeanette"]["test"]["test_split"]
+    args.val_split = args.val_split or config["tool"]["vjeanette"]["test"]["val_split"]
+    args.batch_size = args.batch_size or config["tool"]["vjeanette"]["test"]["batch_size"]
+    args.embed_dim = args.embed_dim or config["tool"]["vjeanette"]["model"]["embed_dim"]
 
     # Load and split data
     train_loader, val_loader, test_loader = load_data(
