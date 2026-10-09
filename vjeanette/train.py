@@ -14,13 +14,30 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
-
+import random 
+import numpy as np
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, TensorDataset
 
 from vjeanette.preprocessing import VDJDataset, dataset_to_pt
 from vjeanette.model.model import UNet1D_Embed
 
+
+def fix_random_state(seed=42):
+    random.seed(seed)
+    
+    np.random.seed(seed)
+    
+    torch.manual_seed(seed)
+    
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+fix_random_state(42)
 
 def existence_loss(logits, target):
     """
@@ -102,7 +119,7 @@ def load_data(pt_path, test_split=0.3, val_split=0.1, batch_size=256,
         verbose: Print progress information
     
     Returns:
-        Tuple of (train_loader, val_loader, test_loader)
+        Tuple of (train_loader, val_loader)
     """
     if verbose:
         print("=" * 60)
@@ -118,19 +135,13 @@ def load_data(pt_path, test_split=0.3, val_split=0.1, batch_size=256,
         print(f"y shape: {y.shape}")
 
     # Split into train/test
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_split, random_state=random_state
-    )
-
-    # Split train into train/validation
     X_train, X_val, y_train, y_val = train_test_split(
-        X_train, y_train, test_size=val_split, random_state=random_state
+        X, y, test_size=val_split, random_state=random_state
     )
 
     if verbose:
         print(f"Train samples: {len(X_train):,}")
         print(f"Validation samples: {len(X_val):,}")
-        print(f"Test samples: {len(X_test):,}")
 
     # Create DataLoaders
     train_loader = DataLoader(
@@ -145,17 +156,11 @@ def load_data(pt_path, test_split=0.3, val_split=0.1, batch_size=256,
         shuffle=False
     )
 
-    test_loader = DataLoader(
-        TensorDataset(X_test, y_test),
-        batch_size=batch_size,
-        shuffle=False
-    )
-
     if verbose:
         print("=" * 60)
         print()
 
-    return train_loader, val_loader, test_loader
+    return train_loader, val_loader, 
 
 
 def create_model(embed_dim=32, device="cuda", verbose=True):
@@ -564,7 +569,7 @@ def main():
     args.embed_dim = args.embed_dim or config["tool"]["vjeanette"]["model"]["embed_dim"]
 
     # Load and split data
-    train_loader, val_loader, test_loader = load_data(
+    train_loader, val_loader = load_data(
         pt_path=args.pt_path,
         test_split=args.test_split,
         val_split=args.val_split,
