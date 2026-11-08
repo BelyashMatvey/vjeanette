@@ -135,8 +135,11 @@ def load_data(pt_path, test_split=0.3, val_split=0.1, batch_size=256,
         print(f"y shape: {y.shape}")
 
     # Split into train/test
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=test_split, random_state=random_state
+    )
     X_train, X_val, y_train, y_val = train_test_split(
-        X, y, test_size=val_split, random_state=random_state
+        X_train, y_train, test_size=val_split, random_state=random_state
     )
 
     if verbose:
@@ -212,13 +215,13 @@ def create_optimizer(model, lr=0.0003, pos_weight=2.0, patience=15,
 
     # Loss functions with positive class weighting
     criterion_v = nn.BCEWithLogitsLoss(
-        pos_weight=torch.tensor([pos_weight]).to(model.device if hasattr(model, 'device') else 'cuda')
+        pos_weight=torch.tensor([pos_weight]).to(next(model.parameters()).device)
     )
     criterion_j = nn.BCEWithLogitsLoss(
-        pos_weight=torch.tensor([pos_weight]).to(model.device if hasattr(model, 'device') else 'cuda')
+        pos_weight=torch.tensor([pos_weight]).to(next(model.parameters()).device)
     )
     criterion_cdr = nn.BCEWithLogitsLoss(
-        pos_weight=torch.tensor([pos_weight]).to(model.device if hasattr(model, 'device') else 'cuda')
+        pos_weight=torch.tensor([pos_weight]).to(next(model.parameters()).device)
     )
 
     # Optimizer
@@ -460,7 +463,7 @@ def train_model(model, train_loader, val_loader, criterion_v, criterion_j,
         # Early stopping check
         if val_metrics['loss']['total'] < best_val_loss:
             best_val_loss = val_metrics['loss']['total']
-            best_model_weights = model.state_dict().copy()
+            best_model_weights = {k: v.detach().clone() for k, v in model.state_dict().items()}
             early_stopping_counter = 0
             if verbose:
                 print("  *** Best model updated ***")
@@ -559,14 +562,10 @@ def main():
     args = parser.parse_args()
 
     # Setup device
-    torch.cuda.empty_cache()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Device: {device}")
-    args.pt_path = args.pt_path or config["tool"]["vjeanette"]["test"]["pt_input"]
-    args.test_split = args.test_split or config["tool"]["vjeanette"]["test"]["test_split"]
-    args.val_split = args.val_split or config["tool"]["vjeanette"]["test"]["val_split"]
-    args.batch_size = args.batch_size or config["tool"]["vjeanette"]["test"]["batch_size"]
-    args.embed_dim = args.embed_dim or config["tool"]["vjeanette"]["model"]["embed_dim"]
 
     # Load and split data
     train_loader, val_loader = load_data(

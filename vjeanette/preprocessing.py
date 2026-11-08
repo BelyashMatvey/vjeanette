@@ -543,7 +543,7 @@ def main():
         description="VJeaNETte VDJ dataset preprocessing"
     )
 
-    # Пути
+    
     parser.add_argument(
         "--ig_file",
         default=None,
